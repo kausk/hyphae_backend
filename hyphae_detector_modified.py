@@ -17,7 +17,7 @@ _MIN_CIRCULARITY, _MAX_CIRCULARITY = 0.8, 1.2
 _MIN_PERIMETER = 50
 
 input_img_path = 'input/input.tif'
-output_img_path = 'output/output.tif'
+output_img_path =  '/Users/ksk/hyphae_frontend/public/output.png'
 
 def process_data_single(img_path,
                  output_img_path=output_img_path,
@@ -28,7 +28,7 @@ def process_data_single(img_path,
     image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX)
     area, feeding_structures = detect_hyphae_area(image, crop=crop, threshold=threshold)
     cv2.imwrite(output_img_path, feeding_structures)
-    print(output_img_path, area)
+    print(area)
     return output_img_path, area
 
 
@@ -64,7 +64,7 @@ def detect_hyphae_area(img, crop=False, threshold=None):
 
     area = 1 - (np.count_nonzero(mask) / mask.size)
     display_img = np.hstack([original_img, feeding_structures])
-    cv_plot(display_img, "Image with contours")
+    ## cv_plot(display_img, "Image with contours")
     return area, display_img
 
 

@@ -11,6 +11,11 @@ var router = express.Router();
 var multer  = require('multer');
 var upload = multer({ dest: 'input/' });
 
+const pathToRoot = '/Users/ksk/hyphae_frontend';
+const savedImgLocation = '/public/output.png';
+const savedFilePath = pathToRoot + savedImgLocation
+
+
 router.get('/', function(req, res, next) {
   res.render('image', { title: 'Express' });
 });
@@ -32,11 +37,20 @@ router.post('/', upload.any(), function(req, res, next) {
     args: [filename]
   };
 
+  let result;
   PythonShell.run('hyphae_detector_modified.py', options, function (err, results) {
     if (err) throw err;
     console.log(results);
+    result = results;
+    console.log(savedFilePath);
+    // res.sendFile(savedFilePath);
+    res.json({
+      area: result[0],
+      location: savedFilePath // saved image location
+    });
   });
 
+  //
   // Renaming code - doable
 
 });
