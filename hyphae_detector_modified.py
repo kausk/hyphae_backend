@@ -17,10 +17,9 @@ _MIN_CIRCULARITY, _MAX_CIRCULARITY = 0.8, 1.2
 _MIN_PERIMETER = 50
 
 input_img_path = 'input/input.tif'
-output_img_path =  '/Users/ksk/hyphae_frontend/public/output.png'
 
 def process_data_single(img_path,
-                 output_img_path=output_img_path,
+                 output_img_path,
                  crop=_DEFAULT_CROP_POLICY,
                  threshold=None):
 
@@ -143,6 +142,8 @@ def _sanitize_name(name):
 
 
 if __name__ == "__main__":
-    filename = "./input/" + sys.argv[1]
-    #print('filename', filename)
-    process_data_single(filename)
+    filename = sys.argv[1] 
+    save_location = sys.argv[1] + '.jpg'
+    print('filename', filename)
+    
+    process_data_single(filename, save_location)
