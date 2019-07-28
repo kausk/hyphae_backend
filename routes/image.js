@@ -1,6 +1,10 @@
+const uploadFileS3 =  require('./amazon.js');
+
 let {PythonShell} = require('python-shell')
 var cors = require('cors');
 var express = require('express');
+
+
 const fs = require('fs');
 
 const path = require("path");
@@ -30,6 +34,8 @@ const storage = multer.diskStorage({
 });
 
 router.post('/', upload.single('image'), (req, res, next) => {
+
+    console.log('post request');
     var regex = ".*\/";
 
     const parent_dir = __dirname.match(regex)[0];
@@ -40,30 +46,50 @@ router.post('/', upload.single('image'), (req, res, next) => {
       args: [filename]
     };
   
+    console.log('running python');
     PythonShell.run('hyphae_detector_modified.py', options, function (err, results) {
       if (err) throw err;
+      console.log('results');
       console.log(results);
+      
+      const area = results[0];
+      const filename = results[1];
 
-      const jpgfile = filename.concat('.jpg');
-      console.log('jpgfile');
-      console.log(jpgfile);
-      res.sendFile(jpgfile);
-      res.status(200);
-      /*
       res.json({
-        area: result[0],
+        area: area,
+        result_img_location: filename
+      });
+        
+      /*
+      const upload_url = uploadFileS3(filename);
+      if (upload_url != -1) {
+        console.log('successful');
+        console.log(upload_url);
+        res.json({
+          area: area,
+          result_img_location: upload_url
+        });
+      } else {
+        console.log('error');
+        res.status(500);
+      }
+      
+      return uploadFileS3(filename)
+        .then(result => {
+          console.log('result img location');
+          console.log(result);
+
+
+        })
+        .catch(error => {
+          console.log('error');
+          res.status(500);
       });
       */
+
     });
   
     // Delete created file and saved file
-    
-
-    
-
-
-
-    res.status(200);
 });
 
 /*

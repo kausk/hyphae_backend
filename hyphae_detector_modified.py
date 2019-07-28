@@ -8,6 +8,7 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 import numpy as np
 from matplotlib import pyplot as plt
+from amazon import upload_toS3
 
 _DEFAULT_DATA_DIR = './data/'
 _DEFAULT_SAVE_DIR = './output/'
@@ -16,7 +17,6 @@ _INTENSITY_THRESHOLD = 128
 _MIN_CIRCULARITY, _MAX_CIRCULARITY = 0.8, 1.2
 _MIN_PERIMETER = 50
 
-input_img_path = 'input/input.tif'
 
 def process_data_single(img_path,
                  output_img_path,
@@ -27,8 +27,11 @@ def process_data_single(img_path,
     image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX)
     area, feeding_structures = detect_hyphae_area(image, crop=crop, threshold=threshold)
     cv2.imwrite(output_img_path, feeding_structures)
+    ## Upload result to S3
+    output_img_path_s3 = upload_toS3(output_img_path)
     print(area)
-    return output_img_path, area
+    print(output_img_path_s3)
+    return output_img_path_s3, area
 
 
 
@@ -144,6 +147,5 @@ def _sanitize_name(name):
 if __name__ == "__main__":
     filename = sys.argv[1] 
     save_location = sys.argv[1] + '.jpg'
-    print('filename', filename)
     
     process_data_single(filename, save_location)
