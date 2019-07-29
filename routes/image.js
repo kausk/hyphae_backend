@@ -13,12 +13,6 @@ const path = require("path");
 var multer  = require('multer');
 var upload = multer({ dest: './public/uploads/' })
 
-const pathToRoot = '/Users/ksk/hyphae_frontend';
-const savedImgLocation = '/public/output.png';
-// const savedFilePath = pathToRoot + savedImgLocation
-
-
-const savedFileFolderPath = '/Users/ksk/hyphae_backend/processed/';
 var router = express.Router();
 
 // Referenced from https://medium.com/@mahesh_joshi/reactjs-nodejs-upload-image-how-to-upload-image-using-reactjs-and-nodejs-multer-918dc66d304c
